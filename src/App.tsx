@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
+<link href="/src/style.css" rel="stylesheet"></link>
 
 const App: React.FC = () => {
   const [view, setView] = useState<"login" | "register">("login");
