@@ -25,13 +25,13 @@ const featureCopy = [
   },
   {
     title: "Tryby językowe",
-    text: "Polski lub angielski interfejs — dopasuj UI do sposobu pracy.",
+    text: "Polski lub angielski interfejs, dopasuj UI do sposobu pracy.",
   },
 ];
 
 const copy = {
   pl: {
-    heading: "Progressly — rytm Twoich projektów",
+    heading: "Progressly",
     subheading:
       "Zarządzaj zadaniami, folderami przedmiotowymi i włączaj współdzielenie projektów bez otwierania kolejnych arkuszy.",
     ctaPrimary: "Rozpocznij planowanie",

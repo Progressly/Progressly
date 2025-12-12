@@ -120,8 +120,7 @@ const App = () => {
         <footer className="app-footer">
           <div className="footer-inner layout-width">
             <p>
-              Progressly © {new Date().getFullYear()} — planuj, współdziel,
-              dowoź.
+              Progressly © {new Date().getFullYear()} - Wszystkie prawa zastrzeżone.
             </p>
           </div>
         </footer>

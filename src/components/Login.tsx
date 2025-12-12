@@ -101,11 +101,7 @@ const Login: React.FC = () => {
   return (
     <div className="auth-card">
       <div className="card-head">
-        <p className="eyebrow">Dostęp do Progressly</p>
-        <h2>Logowanie</h2>
-        <p className="muted">
-          Wejdź do swoich projektów używając nazwy użytkownika lub adresu email.
-        </p>
+        <h2>Zaloguj do Progressly</h2>
       </div>
       <form className="input-stack" onSubmit={handleLogin}>
         <label className="field">
@@ -113,7 +109,7 @@ const Login: React.FC = () => {
           <input
             type="text"
             className="input"
-            placeholder="np. ola.design / ola@progress.ly"
+            placeholder="np. username / email@progressly.com"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
           />

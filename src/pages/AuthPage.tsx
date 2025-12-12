@@ -8,8 +8,7 @@ const AuthPage = () => {
         <p className="eyebrow">Logowanie i tworzenie konta</p>
         <h1>Wejdź do Progressly</h1>
         <p className="muted">
-          Użyj istniejącego konta lub utwórz nowe. Formularze zapisują
-          preferencje "Pamiętaj mnie" oraz kod wysyłany na email.
+          Użyj istniejącego konta lub utwórz nowe.
         </p>
       </header>
 

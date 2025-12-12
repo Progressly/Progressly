@@ -79,12 +79,7 @@ const Register: React.FC = () => {
   return (
     <div className="auth-card">
       <div className="card-head">
-        <p className="eyebrow">Nowe konto Progressly</p>
         <h2>Rejestracja</h2>
-        <p className="muted">
-          Stwórz profil, aby śledzić projekty, automatyczne foldery i wspólne
-          tablice.
-        </p>
       </div>
       <form className="input-stack" onSubmit={handleRegister}>
         <label className="field">
@@ -92,7 +87,7 @@ const Register: React.FC = () => {
           <input
             type="text"
             className="input"
-            placeholder="np. lunar.studio"
+            placeholder="username123"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -102,7 +97,7 @@ const Register: React.FC = () => {
           <input
             type="email"
             className="input"
-            placeholder="hello@progress.ly"
+            placeholder="email@progressly.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -154,13 +149,13 @@ const Register: React.FC = () => {
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
           />
-          <span>Zapamiętaj mnie po rejestracji</span>
+          <span>Zapamiętaj mnie</span>
         </label>
         <button type="submit" className="primary-btn" disabled={isSubmitting}>
           Utwórz konto
         </button>
-        {message && <p className={`helper ${messageType}`}>{message}</p>}
-      </form>
+        {message && <p className={`helper ${messageType}`}>{message}</p>} {/* Yeah we know it says the code lol */}
+        </form>
     </div>
   );
 };
