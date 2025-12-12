@@ -5,5 +5,19 @@
     "email": "qwerty@w.s",
     "password": "qwertyuiop",
     "createdAt": "2025-12-05T14:04:36.470Z"
+  },
+  {
+    "id": "272ffb24-51db-4c18-bf97-4a465da9cb36",
+    "username": "qwerty",
+    "email": "qwerty@gmail.com",
+    "password": "12345678",
+    "createdAt": "2025-12-12T14:07:53.092Z"
+  },
+  {
+    "id": "08f46f90-09a5-49b6-9bd5-53a516602a7e",
+    "username": "qwerty12",
+    "email": "qwerty@qwerty.qwerty",
+    "password": "123456789",
+    "createdAt": "2025-12-12T14:09:23.018Z"
   }
 ]

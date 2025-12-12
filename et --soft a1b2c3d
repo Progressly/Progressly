@@ -1,0 +1,13 @@
+[33m93d080e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m)[m Readme update
+[33maa5de9a[m dodanie mongo db nwm czy dziala
+[33m74d14b3[m main
+[33me73c7b4[m Merge branch 'dev' of github.com:Progressly/Progressly into dev
+[33mb720a28[m 404 page
+[33m4c38d08[m fix: dependency
+[33mb090924[m Registration and login (witjhout styles)
+[33m666a389[m Add custom 404 Not Found page
+[33ma9733d2[m Create 404.tsx
+[33m2c76ff1[m fixed
+[33mfc5e005[m react instalation
+[33me014a62[m test commit
+[33m472aeaa[m[33m ([m[1;31morigin/main[m[33m)[m Initial commit
