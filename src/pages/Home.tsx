@@ -59,13 +59,26 @@ const HomePage = ({ user, language }: HomePageProps) => {
 
         <article className="home-card">
           <header>
+            <h3>Udostępnianie</h3>
+            <span className="status-pill">Nowe</span>
+          </header>
+          <p className="muted">
+            Dodawanie osób do folderów i ustawianie, kto może tylko przeglądać pliki.
+          </p>
+          <button className="primary-btn outline">
+            Utwórz link zaproszenia
+          </button>
+        </article>
+
+        <article className="home-card">
+          <header>
             <h3>Dzisiejszy fokus</h3>
             <span className="muted">3 zadania</span>
           </header>
           <ul>
-            <li>Finalize moodboard dla projektu "ECHO"</li>
-            <li>Zaplanuj sprint dla folderu robotyka</li>
-            <li>Sprawdź nowy deadline geograficzny</li>
+          <li>Opracowanie finalnej wersji moodboardu dla projektu "ECHO"</li>
+          <li>Zaplanuj sprint dla folderu robotyka</li>
+          <li>Sprawdź nowy deadline geograficzny</li>
           </ul>
         </article>
 
@@ -87,20 +100,6 @@ const HomePage = ({ user, language }: HomePageProps) => {
               </div>
             ))}
           </div>
-        </article>
-
-        <article className="home-card">
-          <header>
-            <h3>Udostępnianie</h3>
-            <span className="muted">Project sharing</span>
-          </header>
-          <p className="muted">
-            Dodaj osoby do folderów, kopiuj linki albo ustaw dostęp tylko do
-            odczytu dla klientów.
-          </p>
-          <button className="primary-btn outline">
-            Utwórz link zaproszenia
-          </button>
         </article>
       </div>
     </section>
