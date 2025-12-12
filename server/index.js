@@ -4,8 +4,13 @@ import { randomUUID } from "node:crypto";
 import { seedProjects } from "./data/projects.js";
 import { createUser, deleteUser, updateUser, verifyUser } from "./lib/users.js";
 
+import mongoose from "mongoose";
+
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
+
+
+
 const projects = [...seedProjects];
 
 app.use(cors());
@@ -126,6 +131,14 @@ app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.path} nie istnieje` });
 });
 
-app.listen(PORT, () => {
-  console.log(`Progressly API listening on http://localhost:${PORT}`);
-});
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/progressly")
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`Progressly API listening on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
+

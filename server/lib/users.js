@@ -1,116 +1,76 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { randomUUID } from "node:crypto";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const USERS_PATH = path.resolve(__dirname, "../data/users.json");
-
-const ensureStore = async () => {
-  if (!existsSync(USERS_PATH)) {
-    await writeFile(USERS_PATH, "[]", "utf-8");
-  }
-};
-
-const readUsers = async () => {
-  try {
-    await ensureStore();
-    const raw = await readFile(USERS_PATH, "utf-8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.warn("Nie udało się odczytać bazy użytkowników", error);
-    await writeFile(USERS_PATH, "[]", "utf-8");
-    return [];
-  }
-};
-
-const writeUsers = async (users) => {
-  await writeFile(USERS_PATH, JSON.stringify(users, null, 2), "utf-8");
-};
+import { User } from "../models/User.js";
 
 const sanitizeUser = (user) => {
   if (!user) return null;
-  const { password, ...rest } = user;
-  return rest;
+  // toJSON already handles removing _id, __v, and password
+  return user.toJSON();
 };
 
-const isDuplicate = (users, field, value, ignoreId) =>
-  users.some((user) => user[field] === value && user.id !== ignoreId);
-
 export const createUser = async ({ username, email, password }) => {
-  const users = await readUsers();
-  if (users.some((u) => u.email === email)) {
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
     throw new Error("Email jest już zajęty");
   }
-  if (users.some((u) => u.username === username)) {
+  const existingUsername = await User.findOne({ username });
+  if (existingUsername) {
     throw new Error("Nazwa użytkownika jest zajęta");
   }
 
-  const user = {
-    id: randomUUID(),
+  const user = await User.create({
     username,
     email,
     password,
-    createdAt: new Date().toISOString(),
-  };
+  });
 
-  await writeUsers([...users, user]);
   return sanitizeUser(user);
 };
 
 export const verifyUser = async ({ identifier, password }) => {
-  const users = await readUsers();
-  const match = users.find(
-    (user) =>
-      (user.email === identifier || user.username === identifier) &&
-      user.password === password
-  );
-  return sanitizeUser(match || null);
+  const user = await User.findOne({
+    $or: [{ email: identifier }, { username: identifier }],
+  });
+
+  if (!user || user.password !== password) {
+    return null;
+  }
+
+  return sanitizeUser(user);
 };
 
 export const updateUser = async (id, updates = {}) => {
-  const users = await readUsers();
-  const index = users.findIndex((user) => user.id === id);
-  if (index === -1) {
+  const user = await User.findById(id);
+  if (!user) {
     throw new Error("Nie znaleziono konta");
   }
 
-  const nextUser = { ...users[index] };
-
-  if (updates.username && updates.username !== nextUser.username) {
-    if (isDuplicate(users, "username", updates.username, id)) {
+  if (updates.username && updates.username !== user.username) {
+    const duplicate = await User.findOne({ username: updates.username });
+    if (duplicate) {
       throw new Error("Nazwa użytkownika już istnieje");
     }
-    nextUser.username = updates.username;
+    user.username = updates.username;
   }
 
-  if (updates.email && updates.email !== nextUser.email) {
-    if (isDuplicate(users, "email", updates.email, id)) {
+  if (updates.email && updates.email !== user.email) {
+    const duplicate = await User.findOne({ email: updates.email });
+    if (duplicate) {
       throw new Error("Email jest już zajęty");
     }
-    nextUser.email = updates.email;
+    user.email = updates.email;
   }
 
   if (updates.password) {
-    nextUser.password = updates.password;
+    user.password = updates.password;
   }
 
-  users[index] = nextUser;
-  await writeUsers(users);
-  return sanitizeUser(nextUser);
+  await user.save();
+  return sanitizeUser(user);
 };
 
 export const deleteUser = async (id) => {
-  const users = await readUsers();
-  const index = users.findIndex((user) => user.id === id);
-  if (index === -1) {
+  const user = await User.findByIdAndDelete(id);
+  if (!user) {
     throw new Error("Nie znaleziono konta");
   }
-
-  const [removed] = users.splice(index, 1);
-  await writeUsers(users);
-  return sanitizeUser(removed);
+  return sanitizeUser(user);
 };
