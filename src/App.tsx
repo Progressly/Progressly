@@ -1,39 +1,132 @@
-import React, { useState } from "react";
-import Login from "./components/Login";
-import Register from "./components/Register";
-<link href="/src/style.css" rel="stylesheet"></link>
+import { useEffect, useState } from "react";
+import { BrowserRouter, NavLink, Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/Landing";
+import HomePage from "./pages/Home";
+import ProjectsPage from "./pages/Projects";
+import SettingsPage from "./pages/Settings";
+import AuthPage from "./pages/AuthPage";
+import NotFoundPage from "./pages/404";
+import "./App.css";
+import { getLoggedUser, logoutUser } from "./auth";
+import type { User } from "./auth";
 
-const App: React.FC = () => {
-  const [view, setView] = useState<"login" | "register">("login");
+const navItems = [
+  { path: "/", label: "Landing" },
+  { path: "/home", label: "Home" },
+  { path: "/projects", label: "Projects" },
+  { path: "/settings", label: "Settings" },
+];
+
+const App = () => {
+  const [theme, setTheme] = useState<"light" | "dark">(
+    (localStorage.getItem("progressly-theme") as "light" | "dark") || "dark"
+  );
+  const [language, setLanguage] = useState<"pl" | "en">(
+    (localStorage.getItem("progressly-language") as "pl" | "en") || "pl"
+  );
+  const [user, setUser] = useState<User | null>(() => getLoggedUser());
+
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    localStorage.setItem("progressly-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem("progressly-language", language);
+  }, [language]);
+
+  useEffect(() => {
+    const syncUser = () => {
+      setUser(getLoggedUser());
+    };
+    window.addEventListener("progressly-auth-change", syncUser);
+    syncUser();
+    return () => window.removeEventListener("progressly-auth-change", syncUser);
+  }, []);
+
+  const handleLogout = () => {
+    logoutUser();
+    setUser(null);
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="flex mb-6 gap-4">
-        <button
-          onClick={() => setView("login")}
-          className={`px-4 py-2 rounded ${
-            view === "login"
-              ? "bg-blue-600 text-white"
-              : "bg-white border"
-          }`}
-        >
-          Logowanie
-        </button>
+    <BrowserRouter>
+      <div className="app-shell">
+        <header className="top-nav">
+          <div className="top-nav-inner layout-width">
+            <NavLink to="/" className="brand">
+              Progressly
+            </NavLink>
+            <nav className="nav-links">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+            <div className="nav-cta">
+              <button
+                className="ghost-btn"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? "Tryb jasny" : "Tryb ciemny"}
+              </button>
+              {user ? (
+                <button className="primary-btn outline" onClick={handleLogout}>
+                  Wyloguj {user.username}
+                </button>
+              ) : (
+                <NavLink to="/auth" className="primary-btn">
+                  Zaloguj się
+                </NavLink>
+              )}
+            </div>
+          </div>
+        </header>
 
-        <button
-          onClick={() => setView("register")}
-          className={`px-4 py-2 rounded ${
-            view === "register"
-              ? "bg-green-600 text-white"
-              : "bg-white border"
-          }`}
-        >
-          Rejestracja
-        </button>
+        <main className="page-shell">
+          <div className="page-shell-inner layout-width">
+            <Routes>
+              <Route path="/" element={<LandingPage language={language} />} />
+              <Route
+                path="/home"
+                element={<HomePage user={user} language={language} />}
+              />
+              <Route path="/projects" element={<ProjectsPage user={user} />} />
+              <Route
+                path="/settings"
+                element={
+                  <SettingsPage
+                    theme={theme}
+                    onThemeChange={setTheme}
+                    language={language}
+                    onLanguageChange={setLanguage}
+                    user={user}
+                  />
+                }
+              />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
+        </main>
+
+        <footer className="app-footer">
+          <div className="footer-inner layout-width">
+            <p>
+              Progressly © {new Date().getFullYear()} — planuj, współdziel,
+              dowoź.
+            </p>
+          </div>
+        </footer>
       </div>
-
-      {view === "login" ? <Login /> : <Register />}
-    </div>
+    </BrowserRouter>
   );
 };
 

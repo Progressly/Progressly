@@ -6,118 +6,155 @@ interface ForgotPasswordModalProps {
   onClose: () => void;
 }
 
-const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClose }) => {
+const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const [email, setEmail] = useState("");
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleReset = () => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const exists = users.find((u: any) => u.email === email);
+    if (!email.trim()) {
+      setFeedback("Podaj proszę email");
+      return;
+    }
 
-    alert(exists ? "Instrukcje resetowania wysłane!" : "Taki email nie istnieje.");
+    setFeedback(
+      `Jeśli ${email.trim()} istnieje w Progressly, wysłaliśmy kod resetujący. Sprawdź spam!`
+    );
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-      <div className="bg-white w-80 p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-semibold mb-3">Reset hasła</h3>
+    <div className="modal-overlay" role="dialog" aria-modal>
+      <div className="modal-card">
+        <h3>Reset hasła</h3>
+        <p className="muted">Podaj email, aby otrzymać jednorazowy kod.</p>
         <input
           type="email"
-          placeholder="Podaj email"
-          className="w-full px-3 py-2 border rounded mb-4"
-          onChange={e => setEmail(e.target.value)}
+          placeholder="nazwa@domena.com"
+          className="input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <button
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          onClick={handleReset}
-        >
-          Resetuj
-        </button>
-
-        <button className="w-full mt-3 text-sm text-gray-600" onClick={onClose}>
-          Anuluj
-        </button>
+        {feedback && <p className="helper">{feedback}</p>}
+        <div className="modal-actions">
+          <button type="button" className="primary-btn" onClick={handleReset}>
+            Wyślij kod
+          </button>
+          <button type="button" className="ghost-btn" onClick={onClose}>
+            Zamknij
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [remember, setRemember] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<"success" | "error">(
+    "success"
+  );
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Ładowanie zapamiętanego emaila
   useEffect(() => {
-    const saved = localStorage.getItem("rememberEmail");
-    if (saved) setEmail(saved);
+    const saved = localStorage.getItem("progressly-remembered-login");
+    if (saved) {
+      setIdentifier(saved);
+      setRemember(true);
+    }
   }, []);
 
-  const handleLogin = () => {
-    const result = loginUser(email, password);
-
-    if (remember) {
-      localStorage.setItem("rememberEmail", email);
-    } else {
-      localStorage.removeItem("rememberEmail");
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!identifier.trim() || !password.trim()) {
+      setMessageType("error");
+      setMessage("Uzupełnij login oraz hasło");
+      return;
     }
 
-    setMessage(result.message || "Zalogowano!");
+    setIsSubmitting(true);
+    const result = await loginUser(identifier.trim(), password.trim());
+    setIsSubmitting(false);
+
+    if (result.success) {
+      if (remember) {
+        localStorage.setItem("progressly-remembered-login", identifier.trim());
+      } else {
+        localStorage.removeItem("progressly-remembered-login");
+      }
+      setMessageType("success");
+      setMessage("Miło Cię znowu widzieć!");
+      setPassword("");
+    } else {
+      setMessageType("error");
+      setMessage(result.message || "Coś poszło nie tak");
+    }
   };
 
   return (
-    <div className="max-w-sm mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4 text-center">Logowanie</h2>
-
-      <input
-        type="email"
-        placeholder="Email"
-        className="w-full p-2 border border-gray-300 rounded mb-3"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Hasło"
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-
-      <div className="flex items-center justify-between mb-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={remember}
-            onChange={e => setRemember(e.target.checked)}
-          />
-          <span className="text-sm">Pamiętaj mnie</span>
-        </label>
-
-        <button
-          className="text-sm text-blue-600 hover:underline"
-          onClick={() => setModalOpen(true)}
-        >
-          Zapomniałeś hasła?
-        </button>
+    <div className="auth-card">
+      <div className="card-head">
+        <p className="eyebrow">Dostęp do Progressly</p>
+        <h2>Logowanie</h2>
+        <p className="muted">
+          Wejdź do swoich projektów używając nazwy użytkownika lub adresu email.
+        </p>
       </div>
+      <form className="input-stack" onSubmit={handleLogin}>
+        <label className="field">
+          <span>Nazwa użytkownika lub email</span>
+          <input
+            type="text"
+            className="input"
+            placeholder="np. ola.design / ola@progress.ly"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+          />
+        </label>
+        <label className="field">
+          <span>Hasło</span>
+          <input
+            type="password"
+            className="input"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <div className="form-row">
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            <span>Zapamiętaj mnie</span>
+          </label>
+          <button
+            type="button"
+            className="link-btn"
+            onClick={() => setModalOpen(true)}
+          >
+            Zapomniałeś hasła?
+          </button>
+        </div>
+        <button type="submit" className="primary-btn" disabled={isSubmitting}>
+          Zaloguj się
+        </button>
+        {message && <p className={`helper ${messageType}`}>{message}</p>}
+      </form>
 
-      <button
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        onClick={handleLogin}
-      >
-        Zaloguj
-      </button>
-
-      {message && (
-        <p className="text-center text-sm text-gray-700 mt-3">{message}</p>
-      )}
-
-      <ForgotPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <ForgotPasswordModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </div>
   );
 };

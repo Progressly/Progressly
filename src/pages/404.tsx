@@ -1,25 +1,26 @@
-export default function NotFoundPage() {
-    return (
-        <div className="min-h-screen font-sans flex items-center justify-center">
-            <div className="text-center p-8">
-                <h1 className="text-9xl font-bold text-white mb-4 hover:scale-105 transition-transform duration-300">
-                    404
-                </h1>
-                <h2 className="text-4xl font-semibold mb-6">
-                    <span className="text-[#208EF3]">Page</span>{" "}
-                    <span className="text-[#0F518C]">Not</span>{" "}
-                    <span className="text-[#0F518C]">Found</span>
-                </h2>
-                <p className="text-gray-300 mb-8 text-lg">
-                    The page you're looking for doesn't exist or has been moved.
-                </p>
-                <a
-                    href="/"
-                    className="inline-block px-8 py-3 rounded-lg bg-[#208EF3] text-white text-lg font-medium hover:bg-[#0F518C] transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                >
-                    Return Home
-                </a>
-            </div>
+import { Link } from "react-router-dom";
+
+const NotFoundPage = () => {
+  return (
+    <section className="page not-found">
+      <div className="glow-card huge">
+        <p className="eyebrow">404</p>
+        <h1>Zagubiony adres</h1>
+        <p className="muted">
+          Ta ścieżka nie istnieje lub projekt został przeniesiony. Wróć na
+          główną tablicę i wybierz kolejny kierunek pracy.
+        </p>
+        <div className="cta-group">
+          <Link to="/" className="primary-btn">
+            Wracaj na landing
+          </Link>
+          <Link to="/projects" className="ghost-btn">
+            Otwórz panel projektów
+          </Link>
         </div>
-    );
-}
+      </div>
+    </section>
+  );
+};
+
+export default NotFoundPage;
