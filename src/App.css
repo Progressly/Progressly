@@ -326,7 +326,7 @@ ul {
 .auth-card,
 .home-card,
 .project-card {
-  animation: float 0.6s ease; /* subtle reveal */
+  animation: float 0.6s ease;
 }
 
 .project-form {

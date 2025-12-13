@@ -33,7 +33,7 @@ const copy = {
   pl: {
     heading: "Progressly",
     subheading:
-      "Zarządzaj zadaniami, folderami przedmiotowymi i włączaj współdzielenie projektów bez otwierania kolejnych arkuszy.",
+      "Zarządzaj zadaniami i folderami przedmiotowymi oraz współdziel projekty bez przełączania się między arkuszami.",
     ctaPrimary: "Rozpocznij planowanie",
     ctaSecondary: "Zobacz panel projektów",
   },
