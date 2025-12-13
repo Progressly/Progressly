@@ -20,7 +20,7 @@ const seedProjects: Project[] = [
     category: "Robotyka",
     difficulty: 4,
     progress: 65,
-    startDate: "2025-11-01",
+    startDate: "2025-11-01 ",
     endDate: "2025-12-15",
     shared: true,
     notes: "Integracja z czujnikiem LIDAR",
@@ -31,7 +31,7 @@ const seedProjects: Project[] = [
     category: "Geografia",
     difficulty: 2,
     progress: 40,
-    startDate: "2025-11-20",
+    startDate: "2025-11-20 ",
     endDate: "2025-12-14",
     shared: false,
     notes: "Zebrać materiały od Oli",
@@ -42,7 +42,7 @@ const seedProjects: Project[] = [
     category: "Design",
     difficulty: 3,
     progress: 80,
-    startDate: "2025-10-10",
+    startDate: "2025-10-10 ",
     endDate: "2025-12-20",
     shared: true,
     notes: "Przygotować ćwiczenia w Figmie",
@@ -53,7 +53,7 @@ const seedProjects: Project[] = [
     category: "Robotyka",
     difficulty: 5,
     progress: 20,
-    startDate: "2025-12-01",
+    startDate: "2025-12-01 ",
     endDate: "2026-01-30",
     shared: false,
     notes: "Analiza danych z poprzedniego sprintu",
@@ -152,19 +152,19 @@ const ProjectsPage = ({ user }: { user: User | null }) => {
         </div>
         <div className="stats-grid">
           <article className="stat-card">
-            <span>Projekty ukończone</span>
+            <span>Projekty ukończone </span>
             <strong>{completion}%</strong>
             <div className="progress-bar">
               <span style={{ width: `${completion}%` }} />
             </div>
           </article>
           <article className="stat-card">
-            <span>Śr. trudność</span>
+            <span>Śr. trudność </span>
             <strong>{avgDifficulty}</strong>
             <p className="muted">w skali 1-5</p>
           </article>
           <article className="stat-card">
-            <span>Śr. czas ukończenia</span>
+            <span>Śr. czas ukończenia </span>
             <strong>{avgDuration || "—"} dni</strong>
             <p className="muted">na podstawie planu</p>
           </article>
@@ -173,7 +173,7 @@ const ProjectsPage = ({ user }: { user: User | null }) => {
 
       <div className="projects-grid">
         <form className="project-form" onSubmit={handleAddProject}>
-          <h3>Dodaj lub usuń projekt</h3>
+          <h3>Dodaj projekt</h3>
           <label className="field">
             <span>Nazwa projektu</span>
             <input

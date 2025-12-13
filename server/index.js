@@ -39,8 +39,9 @@ app.post("/api/projects", (req, res) => {
     progress: Number(req.body?.progress) || 0,
     startDate: startDate || new Date().toISOString().slice(0, 10),
     endDate: endDate || startDate || new Date().toISOString().slice(0, 10),
+    dateRange: `${startDate || new Date().toISOString().slice(0, 10)} ${endDate || startDate || new Date().toISOString().slice(0, 10)}`,
     shared: Boolean(req.body?.shared),
-    notes: req.body?.notes || "",
+    notes: req.body?.notes || ""
   };
 
   projects.push(newProject);
