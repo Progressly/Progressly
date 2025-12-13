@@ -114,7 +114,7 @@ const SettingsPage = ({
                 className="input"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
-                placeholder="np. nova.creative"
+                placeholder="np. username123"
               />
             </label>
             <button className="primary-btn" type="submit">
@@ -234,7 +234,7 @@ const SettingsPage = ({
         <article className="settings-section">
           <h3>Security & 2FA</h3>
           <p className="muted">
-            Włącz podwójne uwierzytelnianie, aby blokować nieautoryzowane próby
+            Włącz weryfikację dwuetapową, aby blokować nieautoryzowane próby
             logowania do Progressly.
           </p>
           <label className="checkbox">
