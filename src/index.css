@@ -71,6 +71,7 @@ body[data-theme="light"] {
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 button,
