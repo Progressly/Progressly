@@ -1,5 +1,5 @@
 {
-  "name": "vite-project",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,13 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "node server/index.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.10.1",

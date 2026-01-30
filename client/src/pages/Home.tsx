@@ -19,9 +19,8 @@ const HomePage = ({ user, language }: HomePageProps) => {
 
   return (
     <section className="page home-page">
-      <HomeHero greeting={greeting} />
-
       <div className="home-grid">
+        <HomeHero greeting={greeting} />
         <HomeShortcuts />
         <HomeFocus />
         <HomeDeadlines />

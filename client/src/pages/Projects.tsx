@@ -1,14 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "../auth";
 import { ProjectStats } from "../components/projects/ProjectStats";
-import {
-  ProjectForm,
-  type ProjectFormData,
-} from "../components/projects/ProjectForm";
-import {
-  ProjectBoard,
-  type Project,
-} from "../components/projects/ProjectBoard";
+import { ProjectForm, type ProjectFormData } from "../components/projects/ProjectForm";
+import { ProjectBoard, type Project } from "../components/projects/ProjectBoard";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -73,7 +67,7 @@ const ProjectsPage = ({ user }: { user: User | null }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
+      
       if (res.ok) {
         const { project } = await res.json();
         setProjects((prev) => [project, ...prev]);
@@ -88,7 +82,7 @@ const ProjectsPage = ({ user }: { user: User | null }) => {
       const res = await fetch(`${API_URL}/api/projects/${id}`, {
         method: "DELETE",
       });
-
+      
       if (res.ok) {
         setProjects((prev) => prev.filter((p) => p.id !== id));
       }
@@ -99,39 +93,38 @@ const ProjectsPage = ({ user }: { user: User | null }) => {
 
   return (
     <section className="page projects-page">
-      <header className="projects-header">
-        <div>
-          <p className="eyebrow">Panel projektów</p>
-          <h1>
-            Hej {user?.username || "Twórco"}, tu Twoje foldery i statystyki
-          </h1>
-          <p className="muted">
-            Dodawaj albo usuwaj projekty, śledź procent ukończenia i przełączaj
-            udostępnianie w jednym miejscu.
+      <header className="projects-header-modern">
+        <div className="header-content">
+          <h1>Panel Projektów</h1>
+          <p className="hero-subtitle">
+            Zarządzaj swoimi folderami i śledź postępy prac w czasie rzeczywistym.
           </p>
         </div>
-        <ProjectStats
-          completion={completion}
-          avgDifficulty={avgDifficulty}
-          avgDuration={avgDuration}
-        />
-      </header>
-
-      {loading ? (
-        <div className="home-card">
-          <p>Ładowanie projektów...</p>
-        </div>
-      ) : (
-        <div className="projects-grid">
-          <ProjectForm
-            onSubmit={handleAddProject}
-            categories={Object.keys(grouped)}
+        <div className="header-stats-row">
+           <ProjectStats
+            completion={completion}
+            avgDifficulty={avgDifficulty}
+            avgDuration={avgDuration}
           />
-          <ProjectBoard grouped={grouped} onDelete={handleDeleteProject} />
         </div>
-      )}
+      </header>
+      
+      <div className="projects-layout">
+        <aside className="sidebar-column">
+           <ProjectForm onSubmit={handleAddProject} categories={Object.keys(grouped)} />
+        </aside>
+        
+        <main className="main-column">
+          {loading ? (
+            <div className="loading-state">Ładowanie projektów...</div>
+          ) : (
+             <ProjectBoard grouped={grouped} onDelete={handleDeleteProject} />
+          )}
+        </main>
+      </div>
     </section>
   );
 };
 
 export default ProjectsPage;
+

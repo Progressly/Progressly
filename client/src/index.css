@@ -19,10 +19,10 @@
   box-sizing: border-box;
 }
 
+/* Base Body Styles (Default/Dark) */
 body {
   margin: 0;
   min-height: 100vh;
-  /* Domyślny gradient dla body (dark) */
   background: radial-gradient(
       circle at top,
       rgba(76, 29, 149, 0.15),
@@ -59,11 +59,13 @@ body::before {
   --text-muted: #6b7280;
   --accent-primary: #7c3aed;
   --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(15, 17, 32, 0.16);
+  --nav-bg: rgba(255, 255, 255, 0.8);
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* Dark Mode Variables (Default) */
-:root {
+:root, [data-theme="dark"] {
   --bg-base: #020205; /* Blackish */
   --surface-raised: #0f0b1e; /* Deep purple tint */
   --surface-subdued: #0a0814;
@@ -73,40 +75,15 @@ body::before {
   --text-muted: #a78bfa;
   --accent-primary: #d8b4fe;
   --border-subtle: rgba(139, 92, 246, 0.15);
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="dark"] {
-  --bg-base: #020205;
-  --surface-raised: #0f0b1e;
-  --surface-subdued: #0a0814;
-  --surface-input: #1a162e;
-  --surface-glass: rgba(15, 11, 30, 0.7);
-  --text-primary: #f5f3ff;
-  --text-muted: #a78bfa;
-  --accent-primary: #d8b4fe;
-  --border-subtle: rgba(139, 92, 246, 0.15);
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
   --border-strong: rgba(255, 255, 255, 0.15);
   --nav-bg: rgba(5, 6, 18, 0.92);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Specific background adjustment for light mode to match theme */
 body[data-theme="light"] {
   background: radial-gradient(circle at 10% 20%, rgba(127, 93, 255, 0.25), transparent 50%),
-    #f4f2ff;
-  color: #0f1230;
-  --bg-base: #f4f2ff;
-  --surface-raised: rgba(255, 255, 255, 0.9);
-  --surface-subdued: rgba(255, 255, 255, 0.85);
-  --surface-input: rgba(248, 248, 253, 0.95);
-  --surface-glass: rgba(255, 255, 255, 0.6);
-  --text-primary: #0c0d1c;
-  --text-muted: rgba(10, 12, 30, 0.6);
-  --accent-primary: #6d5cff;
-  --border-subtle: rgba(15, 17, 32, 0.08);
-  --border-strong: rgba(15, 17, 32, 0.16);
-  --nav-bg: rgba(255, 255, 255, 0.8);
+    var(--bg-base);
 }
 
 a {
@@ -129,10 +106,10 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7f5dff, #22d2ff);
+  background: linear-gradient(180deg, #7c3aed, #d946ef);
   border-radius: 999px;
 }
 
 ::selection {
-  background: rgba(34, 210, 255, 0.35);
+  background: rgba(124, 58, 237, 0.35);
 }
