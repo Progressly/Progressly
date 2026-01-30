@@ -1,50 +1,12 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { randomUUID } from "node:crypto";
-import { readFile, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { seedProjects } from "./data/projects.js";
 import { createUser, deleteUser, updateUser, verifyUser } from "./lib/users.js";
 
-dotenv.config();
-
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
-
-// -- File Persistence Setup --
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const PROJECTS_PATH = path.resolve(__dirname, "./data/projects_db.json");
-
-let projects = [];
-
-// Helper: Ensure we have data
-const initData = async () => {
-  if (!existsSync(PROJECTS_PATH)) {
-    console.log("Initializing projects database...");
-    await saveProjects(seedProjects);
-    projects = [...seedProjects];
-  } else {
-    try {
-      const raw = await readFile(PROJECTS_PATH, "utf-8");
-      projects = JSON.parse(raw);
-    } catch (e) {
-      console.error("Error reading projects file, using seed data:", e);
-      projects = [...seedProjects];
-    }
-  }
-};
-
-const saveProjects = async (data) => {
-  await writeFile(PROJECTS_PATH, JSON.stringify(data, null, 2), "utf-8");
-};
-
-// Start initialization
-initData();
+const projects = [...seedProjects];
 
 app.use(cors());
 app.use(express.json());
@@ -53,13 +15,11 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: Date.now() });
 });
 
-// --- Projects API ---
-
 app.get("/api/projects", (_req, res) => {
   res.json({ projects });
 });
 
-app.post("/api/projects", async (req, res) => {
+app.post("/api/projects", (req, res) => {
   const { name, category, startDate, endDate } = req.body ?? {};
 
   if (!name || !category) {
@@ -76,16 +36,13 @@ app.post("/api/projects", async (req, res) => {
     endDate: endDate || startDate || new Date().toISOString().slice(0, 10),
     shared: Boolean(req.body?.shared),
     notes: req.body?.notes || "",
-    createdAt: new Date().toISOString(),
   };
 
   projects.push(newProject);
-  await saveProjects(projects); // Persist
-
   res.status(201).json({ project: newProject });
 });
 
-app.delete("/api/projects/:id", async (req, res) => {
+app.delete("/api/projects/:id", (req, res) => {
   const target = req.params.id;
   const index = projects.findIndex((project) => project.id === target);
 
@@ -94,12 +51,8 @@ app.delete("/api/projects/:id", async (req, res) => {
   }
 
   const [removed] = projects.splice(index, 1);
-  await saveProjects(projects); // Persist
-  
   res.json({ project: removed });
 });
-
-// --- Auth API ---
 
 app.post("/api/auth/register", async (req, res) => {
   const username = req.body?.username?.trim();
@@ -174,5 +127,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Progressly API listening on port ${PORT} (Local File Mode)`);
+  console.log(`Progressly API listening on http://localhost:${PORT}`);
 });
